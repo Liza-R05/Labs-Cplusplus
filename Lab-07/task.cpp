@@ -1,36 +1,47 @@
 #include <iostream>
-#include <vector>
 #include <cmath>
 #include <stdexcept>
+#include <string>
+#include <locale>
 
 using namespace std;
+
+const int MAX = 20;
 
 // Абстрактный базовый класс
 class Forma {
 protected:
     string nazvanie;
+
 public:
     Forma(const string& n = "Форма") : nazvanie(n) {}
     virtual ~Forma() {}
 
+    string getNazvanie() const {
+        return nazvanie;
+    }
+
     virtual double perimeter() const = 0;
     virtual double ploshad() const = 0;
     virtual void print() const = 0;
-
-    string getNazvanie() const { return nazvanie; }
 };
 
-// Класс Точка
+// Точка
 class Tochka : public Forma {
 private:
-    double x, y;
+    double x;
+    double y;
+
 public:
-    Tochka(double x = 0, double y = 0) : Forma("Точка"), x(x), y(y) {}
+    Tochka(double x = 0, double y = 0)
+        : Forma("Точка"), x(x), y(y) {
+    }
 
     double getX() const { return x; }
     double getY() const { return y; }
-    void setX(double val) { x = val; }
-    void setY(double val) { y = val; }
+
+    void setX(double v) { x = v; }
+    void setY(double v) { y = v; }
 
     double distanceTo(const Tochka& other) const {
         double dx = x - other.x;
@@ -38,162 +49,209 @@ public:
         return sqrt(dx * dx + dy * dy);
     }
 
-    double perimeter() const override { return 0; }
-    double ploshad() const override { return 0; }
+    double perimeter() const override {
+        return 0;
+    }
+
+    double ploshad() const override {
+        return 0;
+    }
 
     void print() const override {
-        cout << "Точка (" << x << ", " << y << ")";
+        cout << "Точка (" << x << ", " << y << ")" << endl;
     }
 };
 
-// Класс Многоугольник
+// Многоугольник
 class Mnogougolnik : public Forma {
 protected:
-    vector<Tochka> vershiny;
+    Tochka vershiny[MAX];
+    int count;
 
     void proverka() const {
-        if (vershiny.size() < 3) {
+        if (count < 3) {
             throw runtime_error("Мало вершин");
         }
     }
 
 public:
-    Mnogougolnik(const string& n = "Многоугольник") : Forma(n) {}
-
-    Mnogougolnik(const vector<Tochka>& points, const string& n = "Многоугольник")
-        : Forma(n), vershiny(points) {
-        proverka();
+    Mnogougolnik(const string& n = "Многоугольник")
+        : Forma(n), count(0) {
     }
 
     void addVertex(const Tochka& t) {
-        vershiny.push_back(t);
+        if (count >= MAX) {
+            throw runtime_error("Слишком много вершин");
+        }
+        vershiny[count++] = t;
+    }
+
+    int getCount() const {
+        return count;
     }
 
     double perimeter() const override {
-        if (vershiny.size() < 2) return 0;
+        proverka();
+
         double res = 0;
-        for (size_t i = 0; i < vershiny.size(); i++) {
-            size_t next = (i + 1) % vershiny.size();
+
+        for (int i = 0; i < count; i++) {
+            int next = (i + 1) % count;
             res += vershiny[i].distanceTo(vershiny[next]);
         }
+
         return res;
     }
 
     double ploshad() const override {
         proverka();
+
         double res = 0;
-        int n = vershiny.size();
-        for (int i = 0; i < n; i++) {
-            int next = (i + 1) % n;
+
+        for (int i = 0; i < count; i++) {
+            int next = (i + 1) % count;
+
             res += vershiny[i].getX() * vershiny[next].getY();
             res -= vershiny[next].getX() * vershiny[i].getY();
         }
-        return abs(res) / 2.0;
+
+        return fabs(res) / 2.0;
     }
 
     void print() const override {
-        cout << nazvanie << " с " << vershiny.size() << " вершинами:" << endl;
-        for (const auto& v : vershiny) {
-            cout << "  ";
-            v.print();
-            cout << endl;
+        cout << nazvanie << endl;
+
+        for (int i = 0; i < count; i++) {
+            cout << "Вершина " << i + 1 << ": ("
+                << vershiny[i].getX() << ", "
+                << vershiny[i].getY() << ")" << endl;
         }
     }
 };
 
-// Класс Многогранник
+// Многогранник (призма)
 class Mnogogrannik : public Mnogougolnik {
 private:
     double vysota;
 
 public:
-    Mnogogrannik(const string& n = "Многогранник") : Mnogougolnik(n), vysota(0) {}
-
-    Mnogogrannik(const vector<Tochka>& basePoints, double h, const string& n = "Многогранник")
-        : Mnogougolnik(basePoints, n), vysota(h) {
-        if (h <= 0) {
-            throw runtime_error("Высота должна быть положительной");
-        }
+    Mnogogrannik(const string& n = "Многогранник")
+        : Mnogougolnik(n), vysota(1) {
     }
 
     void setVysota(double h) {
-        if (h <= 0) {
-            throw runtime_error("Высота должна быть положительной");
-        }
+        if (h <= 0)
+            throw runtime_error("Высота должна быть > 0");
         vysota = h;
     }
 
-    double getVysota() const { return vysota; }
+    double getVysota() const {
+        return vysota;
+    }
 
     double perimeter() const override {
-        return Mnogougolnik::perimeter();
+        proverka();
+        return 2 * Mnogougolnik::perimeter() + count * vysota;
     }
 
     double ploshad() const override {
-        double osn = Mnogougolnik::ploshad();
-        double bok = perimeter() * vysota;
-        return 2 * osn + bok;
+        proverka();
+        return 2 * Mnogougolnik::ploshad() +
+            Mnogougolnik::perimeter() * vysota;
     }
 
     double obem() const {
+        proverka();
         return Mnogougolnik::ploshad() * vysota;
     }
 
     void print() const override {
-        cout << nazvanie << " (3D)" << endl;
-        cout << "Основание: ";
-        Mnogougolnik::print();
+        cout << nazvanie << endl;
+
+
+        for (int i = 0; i < count; i++) {
+            cout << "Основание " << i + 1 << ": ("
+                << vershiny[i].getX() << ", "
+                << vershiny[i].getY() << ")" << endl;
+        }
+
         cout << "Высота: " << vysota << endl;
-        cout << "Объем: " << obem() << endl;
     }
 };
 
 // Демонстрация динамического связывания
 void show(Forma* f) {
-    cout << "\n- " << f->getNazvanie() << " -" << endl;
+    cout << "\n-------------------\n";
+    cout << f->getNazvanie() << endl;
+
     f->print();
+
     cout << "Периметр: " << f->perimeter() << endl;
     cout << "Площадь: " << f->ploshad() << endl;
+
+    Mnogogrannik* m = dynamic_cast<Mnogogrannik*>(f);
+
+    if (m != nullptr) {
+        cout << "Объем: " << m->obem() << endl;
+    }
 }
 
 int main() {
-    setlocale(LC_ALL, "RUS");
+
+    setlocale(LC_ALL, "Russian");
+
     try {
+
         Tochka t1(0, 0);
         Tochka t2(4, 0);
         Tochka t3(4, 3);
         Tochka t4(0, 3);
 
-        cout << "\n- Точки -" << endl;
-        t1.print(); cout << endl;
-        t2.print(); cout << endl;
-        cout << "Расстояние: " << t1.distanceTo(t2) << endl;
+        cout << "Расстояние между точками: "
+            << t1.distanceTo(t2) << endl;
 
-        vector<Tochka> tri = { t1, t2, t3 };
-        vector<Tochka> quad = { t1, t2, t3, t4 };
+        // Треугольник
+        Mnogougolnik tri("Треугольник");
 
-        Mnogougolnik treugolnik(tri, "Треугольник");
-        Mnogougolnik pryamougolnik(quad, "Прямоугольник");
-        Mnogogrannik prizma1(quad, 5, "Призма");
-        Mnogogrannik prizma2(tri, 7, "Треугольная призма");
+        tri.addVertex(t1);
+        tri.addVertex(t2);
+        tri.addVertex(t3);
 
-        cout << "\n- ДИНАМИЧЕСКОЕ СВЯЗЫВАНИЕ -" << endl;
+        // Прямоугольник
+        Mnogougolnik rect("Прямоугольник");
 
-        vector<Forma*> figury;
-        figury.push_back(&t1);
-        figury.push_back(&treugolnik);
-        figury.push_back(&pryamougolnik);
-        figury.push_back(&prizma1);
-        figury.push_back(&prizma2);
+        rect.addVertex(t1);
+        rect.addVertex(t2);
+        rect.addVertex(t3);
+        rect.addVertex(t4);
 
-        for (size_t i = 0; i < figury.size(); i++) {
+        // Призма
+        Mnogogrannik prizma("Призма");
+
+        prizma.addVertex(t1);
+        prizma.addVertex(t2);
+        prizma.addVertex(t3);
+        prizma.addVertex(t4);
+
+        prizma.setVysota(5);
+
+        // динамическое связывание
+        Forma* figury[4];
+
+        figury[0] = &t1;
+        figury[1] = &tri;
+        figury[2] = &rect;
+        figury[3] = &prizma;
+
+        cout << "\nДИНАМИЧЕСКОЕ СВЯЗЫВАНИЕ\n";
+
+        for (int i = 0; i < 4; i++) {
             show(figury[i]);
         }
 
     }
-    catch (const exception& e) {
-        cerr << "Ошибка: " << e.what() << endl;
-        return 1;
+    catch (exception& e) {
+        cout << "Ошибка: " << e.what() << endl;
     }
 
     return 0;
