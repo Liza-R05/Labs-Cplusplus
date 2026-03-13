@@ -5,12 +5,12 @@
 
 using namespace std;
 
-// Абстрактный базовый класс
+// РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ
 class Forma {
 protected:
     string nazvanie;
 public:
-    Forma(const string& n = "Форма") : nazvanie(n) {}
+    Forma(const string& n = "Р¤РѕСЂРјР°") : nazvanie(n) {}
     virtual ~Forma() {}
 
     virtual double perimeter() const = 0;
@@ -20,12 +20,12 @@ public:
     string getNazvanie() const { return nazvanie; }
 };
 
-// Класс Точка
+// РљР»Р°СЃСЃ РўРѕС‡РєР°
 class Tochka : public Forma {
 private:
     double x, y;
 public:
-    Tochka(double x = 0, double y = 0) : Forma("Точка"), x(x), y(y) {}
+    Tochka(double x = 0, double y = 0) : Forma("РўРѕС‡РєР°"), x(x), y(y) {}
 
     double getX() const { return x; }
     double getY() const { return y; }
@@ -42,25 +42,25 @@ public:
     double ploshad() const override { return 0; }
 
     void print() const override {
-        cout << "Точка (" << x << ", " << y << ")";
+        cout << "РўРѕС‡РєР° (" << x << ", " << y << ")";
     }
 };
 
-// Класс Многоугольник
+// РљР»Р°СЃСЃ РњРЅРѕРіРѕСѓРіРѕР»СЊРЅРёРє
 class Mnogougolnik : public Forma {
 protected:
     vector<Tochka> vershiny;
 
     void proverka() const {
         if (vershiny.size() < 3) {
-            throw runtime_error("Мало вершин");
+            throw runtime_error("РњР°Р»Рѕ РІРµСЂС€РёРЅ");
         }
     }
 
 public:
-    Mnogougolnik(const string& n = "Многоугольник") : Forma(n) {}
+    Mnogougolnik(const string& n = "РњРЅРѕРіРѕСѓРіРѕР»СЊРЅРёРє") : Forma(n) {}
 
-    Mnogougolnik(const vector<Tochka>& points, const string& n = "Многоугольник")
+    Mnogougolnik(const vector<Tochka>& points, const string& n = "РњРЅРѕРіРѕСѓРіРѕР»СЊРЅРёРє")
         : Forma(n), vershiny(points) {
         proverka();
     }
@@ -92,7 +92,7 @@ public:
     }
 
     void print() const override {
-        cout << nazvanie << " с " << vershiny.size() << " вершинами:" << endl;
+        cout << nazvanie << " СЃ " << vershiny.size() << " РІРµСЂС€РёРЅР°РјРё:" << endl;
         for (const auto& v : vershiny) {
             cout << "  ";
             v.print();
@@ -101,24 +101,24 @@ public:
     }
 };
 
-// Класс Многогранник
+// РљР»Р°СЃСЃ РњРЅРѕРіРѕРіСЂР°РЅРЅРёРє
 class Mnogogrannik : public Mnogougolnik {
 private:
     double vysota;
 
 public:
-    Mnogogrannik(const string& n = "Многогранник") : Mnogougolnik(n), vysota(0) {}
+    Mnogogrannik(const string& n = "РњРЅРѕРіРѕРіСЂР°РЅРЅРёРє") : Mnogougolnik(n), vysota(0) {}
 
-    Mnogogrannik(const vector<Tochka>& basePoints, double h, const string& n = "Многогранник")
+    Mnogogrannik(const vector<Tochka>& basePoints, double h, const string& n = "РњРЅРѕРіРѕРіСЂР°РЅРЅРёРє")
         : Mnogougolnik(basePoints, n), vysota(h) {
         if (h <= 0) {
-            throw runtime_error("Высота должна быть положительной");
+            throw runtime_error("Р’С‹СЃРѕС‚Р° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕР№");
         }
     }
 
     void setVysota(double h) {
         if (h <= 0) {
-            throw runtime_error("Высота должна быть положительной");
+            throw runtime_error("Р’С‹СЃРѕС‚Р° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕР№");
         }
         vysota = h;
     }
@@ -141,19 +141,19 @@ public:
 
     void print() const override {
         cout << nazvanie << " (3D)" << endl;
-        cout << "Основание: ";
+        cout << "РћСЃРЅРѕРІР°РЅРёРµ: ";
         Mnogougolnik::print();
-        cout << "Высота: " << vysota << endl;
-        cout << "Объем: " << obem() << endl;
+        cout << "Р’С‹СЃРѕС‚Р°: " << vysota << endl;
+        cout << "РћР±СЉРµРј: " << obem() << endl;
     }
 };
 
-// Демонстрация динамического связывания
+// Р”РµРјРѕРЅСЃС‚СЂР°С†РёСЏ РґРёРЅР°РјРёС‡РµСЃРєРѕРіРѕ СЃРІСЏР·С‹РІР°РЅРёСЏ
 void show(Forma* f) {
     cout << "\n- " << f->getNazvanie() << " -" << endl;
     f->print();
-    cout << "Периметр: " << f->perimeter() << endl;
-    cout << "Площадь: " << f->ploshad() << endl;
+    cout << "РџРµСЂРёРјРµС‚СЂ: " << f->perimeter() << endl;
+    cout << "РџР»РѕС‰Р°РґСЊ: " << f->ploshad() << endl;
 }
 
 int main() {
@@ -164,20 +164,20 @@ int main() {
         Tochka t3(4, 3);
         Tochka t4(0, 3);
 
-        cout << "\n- Точки -" << endl;
+        cout << "\n- РўРѕС‡РєРё -" << endl;
         t1.print(); cout << endl;
         t2.print(); cout << endl;
-        cout << "Расстояние: " << t1.distanceTo(t2) << endl;
+        cout << "Р Р°СЃСЃС‚РѕСЏРЅРёРµ: " << t1.distanceTo(t2) << endl;
 
         vector<Tochka> tri = { t1, t2, t3 };
         vector<Tochka> quad = { t1, t2, t3, t4 };
 
-        Mnogougolnik treugolnik(tri, "Треугольник");
-        Mnogougolnik pryamougolnik(quad, "Прямоугольник");
-        Mnogogrannik prizma1(quad, 5, "Призма");
-        Mnogogrannik prizma2(tri, 7, "Треугольная призма");
+        Mnogougolnik treugolnik(tri, "РўСЂРµСѓРіРѕР»СЊРЅРёРє");
+        Mnogougolnik pryamougolnik(quad, "РџСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє");
+        Mnogogrannik prizma1(quad, 5, "РџСЂРёР·РјР°");
+        Mnogogrannik prizma2(tri, 7, "РўСЂРµСѓРіРѕР»СЊРЅР°СЏ РїСЂРёР·РјР°");
 
-        cout << "\n- ДИНАМИЧЕСКОЕ СВЯЗЫВАНИЕ -" << endl;
+        cout << "\n- Р”РРќРђРњРР§Р•РЎРљРћР• РЎР’РЇР—Р«Р’РђРќРР• -" << endl;
 
         vector<Forma*> figury;
         figury.push_back(&t1);
@@ -192,7 +192,7 @@ int main() {
 
     }
     catch (const exception& e) {
-        cerr << "Ошибка: " << e.what() << endl;
+        cerr << "РћС€РёР±РєР°: " << e.what() << endl;
         return 1;
     }
 
