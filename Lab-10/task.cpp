@@ -11,7 +11,7 @@ using namespace std;
 
 mutex mtx;
 
-// ==================== ÊËÀÑÑ ÊÎÌÀÍÄÀ ====================
+// ĞºĞ»Ğ°ÑÑ ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´Ğ°
 class Team {
 public:
     string name;
@@ -29,7 +29,7 @@ public:
     }
 };
 
-// ==================== ÔÓÍÊÖÈß ÄËß ÎÒĞÈÑÎÂÊÈ ÏÎËÎÑÛ ====================
+// Ğ²Ğ¸Ğ·ÑƒĞ°Ğ»
 void drawBar(int current) {
     for (int i = 0; i < current; i++) {
         cout << "#";
@@ -39,7 +39,7 @@ void drawBar(int current) {
     }
 }
 
-// ==================== ÔÓÍÊÖÈß ÁÈÒÂÛ ====================
+// Ğ±Ğ¾Ğ¹
 void battle(vector<Team>& teams, int index) {
     random_device rd;
     mt19937 gen(rd());
@@ -53,10 +53,10 @@ void battle(vector<Team>& teams, int index) {
         
         lock_guard<mutex> lock(mtx);
 
-        // ïğîâåğÿåì, æèâà ëè êîìàíäà
+        // Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼, Ğ¶Ğ¸Ğ²Ğ° Ğ»Ğ¸ ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´Ğ°
         if (!teams[index].alive) break;
 
-        // ïğîâåğÿåì, åñòü ëè æèâûå ïğîòèâíèêè
+        // Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼, ĞµÑÑ‚ÑŒ Ğ»Ğ¸ Ğ¶Ğ¸Ğ²Ñ‹Ğµ Ğ¿Ñ€Ğ¾Ñ‚Ğ¸Ğ²Ğ½Ğ¸ĞºĞ¸
         vector<int> aliveTargets;
         for (int i = 0; i < teams.size(); i++) {
             if (i != index && teams[i].alive) {
@@ -82,28 +82,28 @@ void battle(vector<Team>& teams, int index) {
             teams[target].alive = false;
         }
 
-        // âûâîä
+        // Ğ²Ñ‹Ğ²Ğ¾Ğ´
         cout << "\n----------------------------------------------\n";
-        cout << "Ïîòîê êîìàíäû: " << teams[index].name;
-        cout << "\nÏğèîğèòåò: " << teams[index].priority;
-        cout << "\n     Ïğèğîñò: +" << newFighters;
-        cout << "\n     Àòàêà íà: " << teams[target].name;
-        cout << "\n     Óáèòî: " << actualKilled;
-        cout << "\n     Áîéöîâ: " << teams[index].fighters << "/20";
+        cout << "ĞŸĞ¾Ñ‚Ğ¾Ğº ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´Ñ‹: " << teams[index].name;
+        cout << "\nĞŸÑ€Ğ¸Ğ¾Ñ€Ğ¸Ñ‚ĞµÑ‚: " << teams[index].priority;
+        cout << "\n     ĞŸÑ€Ğ¸Ñ€Ğ¾ÑÑ‚: +" << newFighters;
+        cout << "\n     ĞÑ‚Ğ°ĞºĞ° Ğ½Ğ°: " << teams[target].name;
+        cout << "\n     Ğ£Ğ±Ğ¸Ñ‚Ğ¾: " << actualKilled;
+        cout << "\n     Ğ‘Ğ¾Ğ¹Ñ†Ğ¾Ğ²: " << teams[index].fighters << "/20";
         cout << "\n----------------------------------------------\n";
     }
 
-    // ñîîáùåíèå î ïîğàæåíèè
+    // ÑĞ¾Ğ¾Ğ±Ñ‰ĞµĞ½Ğ¸Ğµ Ğ¾ Ğ¿Ğ¾Ñ€Ğ°Ğ¶ĞµĞ½Ğ¸Ğ¸
     mtx.lock();
     if (!teams[index].alive) {
         cout << "\n=============================================" << endl;
-        cout << "ÊÎÌÀÍÄÀ " << teams[index].name << " ÏÎÒÅĞÏÅËÀ ÏÎĞÀÆÅÍÈÅ" << endl;
+        cout << "ĞšĞĞœĞĞĞ”Ğ " << teams[index].name << " ĞŸĞĞ¢Ğ•Ğ ĞŸĞ•Ğ›Ğ ĞŸĞĞ ĞĞ–Ğ•ĞĞ˜Ğ•" << endl;
         cout << "=============================================" << endl;
     }
     mtx.unlock();
 }
 
-// ==================== ÓÑÒÀÍÎÂÊÀ ÏĞÈÎĞÈÒÅÒÀ ====================
+// Ğ¿Ñ€Ğ¸Ğ¾Ñ€Ğ¸Ñ‚ĞµÑ‚
 void setPriority(thread& t, int priority) {
     HANDLE h = t.native_handle();
     if (priority <= 10) {
@@ -117,16 +117,15 @@ void setPriority(thread& t, int priority) {
     }
 }
 
-// ==================== ÃËÀÂÍÀß ÔÓÍÊÖÈß ====================
 int main() {
     setlocale(LC_ALL, "Russian");
 
     cout << "=============================================" << endl;
-    cout << "ÁÈÒÂÀ ÊÎÌÀÍÄ (ÌÍÎÃÎÏÎÒÎ×ÍÎÅ ÏĞÎÃĞÀÌÌÈĞÎÂÀÍÈÅ)" << endl;
+    cout << "Ğ‘Ğ˜Ğ¢Ğ’Ğ ĞšĞĞœĞĞĞ” (ĞœĞĞĞ“ĞĞŸĞĞ¢ĞĞ§ĞĞĞ• ĞŸĞ ĞĞ“Ğ ĞĞœĞœĞ˜Ğ ĞĞ’ĞĞĞ˜Ğ•)" << endl;
     cout << "=============================================" << endl;
 
     int teamCount;
-    cout << "\nÂâåäèòå êîëè÷åñòâî êîìàíä (2-5): ";
+    cout << "\nĞ’Ğ²ĞµĞ´Ğ¸Ñ‚Ğµ ĞºĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´ (2-5): ";
     cin >> teamCount;
 
     if (teamCount < 2) teamCount = 2;
@@ -141,22 +140,22 @@ int main() {
         int priority;
 
         cout << "\n---------------------------------------------" << endl;
-        cout << "Êîìàíäà " << i + 1 << endl;
+        cout << "ĞšĞ¾Ğ¼Ğ°Ğ½Ğ´Ğ° " << i + 1 << endl;
         cout << "---------------------------------------------" << endl;
-        cout << "Íàçâàíèå: ";
+        cout << "ĞĞ°Ğ·Ğ²Ğ°Ğ½Ğ¸Ğµ: ";
         cin >> name;
-        cout << "Íà÷àëüíîå êîëè÷åñòâî áîéöîâ (1-20): ";
+        cout << "ĞĞ°Ñ‡Ğ°Ğ»ÑŒĞ½Ğ¾Ğµ ĞºĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ Ğ±Ğ¾Ğ¹Ñ†Ğ¾Ğ² (1-20): ";
         cin >> fighters;
         if (fighters < 1) fighters = 1;
         if (fighters > 20) fighters = 20;
-        cout << "Ïğèîğèòåò ïîòîêà (1-30): ";
+        cout << "ĞŸÑ€Ğ¸Ğ¾Ñ€Ğ¸Ñ‚ĞµÑ‚ Ğ¿Ğ¾Ñ‚Ğ¾ĞºĞ° (1-30): ";
         cin >> priority;
 
         teams.push_back(Team(name, fighters, priority));
     }
 
     cout << "\n=============================================" << endl;
-    cout << "ÍÀ×ÀËÎ ÁÈÒÂÛ" << endl;
+    cout << "ĞĞĞ§ĞĞ›Ğ Ğ‘Ğ˜Ğ¢Ğ’Ğ«" << endl;
     cout << "=============================================" << endl;
 
     for (int i = 0; i < teamCount; i++) {
@@ -172,7 +171,7 @@ int main() {
     }
 
     cout << "\n=============================================" << endl;
-    cout << "ĞÅÇÓËÜÒÀÒÛ ÁÈÒÂÛ" << endl;
+    cout << "Ğ Ğ•Ğ—Ğ£Ğ›Ğ¬Ğ¢ĞĞ¢Ğ« Ğ‘Ğ˜Ğ¢Ğ’Ğ«" << endl;
     cout << "=============================================" << endl;
 
     int winner = -1;
@@ -181,28 +180,28 @@ int main() {
         cout << "\n---------------------------------------------" << endl;
         cout << teams[i].name << endl;
         cout << "---------------------------------------------" << endl;
-        cout << "Áîéöîâ îñòàëîñü: " << teams[i].fighters << "/20" << endl;
-        cout << "Óíè÷òîæåíî âğàãîâ: " << teams[i].kills << endl;
-        cout << "Ïîëîñà çäîğîâüÿ: [";
+        cout << "Ğ‘Ğ¾Ğ¹Ñ†Ğ¾Ğ² Ğ¾ÑÑ‚Ğ°Ğ»Ğ¾ÑÑŒ: " << teams[i].fighters << "/20" << endl;
+        cout << "Ğ£Ğ½Ğ¸Ñ‡Ñ‚Ğ¾Ğ¶ĞµĞ½Ğ¾ Ğ²Ñ€Ğ°Ğ³Ğ¾Ğ²: " << teams[i].kills << endl;
+        cout << "ĞŸĞ¾Ğ»Ğ¾ÑĞ° Ğ·Ğ´Ğ¾Ñ€Ğ¾Ğ²ÑŒÑ: [";
         drawBar(teams[i].fighters);
         cout << "]" << endl;
 
         if (teams[i].alive) {
-            cout << "Ñòàòóñ: ÂÛÆÈËÀ" << endl;
+            cout << "Ğ¡Ñ‚Ğ°Ñ‚ÑƒÑ: Ğ’Ğ«Ğ–Ğ˜Ğ›Ğ" << endl;
             winner = i;
         }
         else {
-            cout << "Ñòàòóñ: ÓÍÈ×ÒÎÆÅÍÀ" << endl;
+            cout << "Ğ¡Ñ‚Ğ°Ñ‚ÑƒÑ: Ğ£ĞĞ˜Ğ§Ğ¢ĞĞ–Ğ•ĞĞ" << endl;
         }
         cout << "---------------------------------------------" << endl;
     }
 
     cout << "\n=============================================" << endl;
     if (winner != -1) {
-        cout << "ÏÎÁÅÄÈÒÅËÜ: " << teams[winner].name << endl;
+        cout << "ĞŸĞĞ‘Ğ•Ğ”Ğ˜Ğ¢Ğ•Ğ›Ğ¬: " << teams[winner].name << endl;
     }
     else {
-        cout << "ÍÈ×Üß. ÂÑÅ ÊÎÌÀÍÄÛ ÓÍÈ×ÒÎÆÅÍÛ" << endl;
+        cout << "ĞĞ˜Ğ§Ğ¬Ğ¯. Ğ’Ğ¡Ğ• ĞšĞĞœĞĞĞ”Ğ« Ğ£ĞĞ˜Ğ§Ğ¢ĞĞ–Ğ•ĞĞ«" << endl;
     }
     cout << "=============================================" << endl;
 
