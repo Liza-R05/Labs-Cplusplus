@@ -7,52 +7,52 @@
 
 using namespace std;
 
-// Товар
+// РўРѕРІР°СЂ
 class Product {
 private:
-    string article;   // артикул товара
-    string name;      // наименование товара
-    int quantity;     // количество на складе
-    double price;     // цена за единицу
+    string article;   // Р°СЂС‚РёРєСѓР» С‚РѕРІР°СЂР°
+    string name;      // РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РѕРІР°СЂР°
+    int quantity;     // РєРѕР»РёС‡РµСЃС‚РІРѕ РЅР° СЃРєР»Р°РґРµ
+    double price;     // С†РµРЅР° Р·Р° РµРґРёРЅРёС†Сѓ
 
 public:
-    // Конструкторы
+    // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
     Product() : quantity(0), price(0.0) {}
 
     Product(const string& article, const string& name, int quantity, double price)
         : article(article), name(name), quantity(quantity), price(price) {
     }
 
-    // Геттеры
+    // Р“РµС‚С‚РµСЂС‹
     string getArticle() const { return article; }
     string getName() const { return name; }
     int getQuantity() const { return quantity; }
     double getPrice() const { return price; }
 
-    // Сеттеры
+    // РЎРµС‚С‚РµСЂС‹
     void setQuantity(int newQuantity) { quantity = newQuantity; }
     void setPrice(double newPrice) { price = newPrice; }
 
-    // Общая стоимость товара
+    // РћР±С‰Р°СЏ СЃС‚РѕРёРјРѕСЃС‚СЊ С‚РѕРІР°СЂР°
     double getTotalValue() const {
         return quantity * price;
     }
 
-    // Вывод информации о товаре
+    // Р’С‹РІРѕРґ РёРЅС„РѕСЂРјР°С†РёРё Рѕ С‚РѕРІР°СЂРµ
     void print() const {
-        cout << "Артикул: " << article << endl;
-        cout << "Наименование: " << name << endl;
-        cout << "Количество: " << quantity << endl;
-        cout << "Цена за ед.: " << price << " руб." << endl;
-        cout << "Общая стоимость: " << getTotalValue() << " руб." << endl;
+        cout << "РђСЂС‚РёРєСѓР»: " << article << endl;
+        cout << "РќР°РёРјРµРЅРѕРІР°РЅРёРµ: " << name << endl;
+        cout << "РљРѕР»РёС‡РµСЃС‚РІРѕ: " << quantity << endl;
+        cout << "Р¦РµРЅР° Р·Р° РµРґ.: " << price << " СЂСѓР±." << endl;
+        cout << "РћР±С‰Р°СЏ СЃС‚РѕРёРјРѕСЃС‚СЊ: " << getTotalValue() << " СЂСѓР±." << endl;
     }
 
-    // Преобразование в строку для сохранения в файл
+    // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ СЃС‚СЂРѕРєСѓ РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ РІ С„Р°Р№Р»
     string toString() const {
         return article + ";" + name + ";" + to_string(quantity) + ";" + to_string(price);
     }
 
-    // Создание объекта Product из строки файла
+    // РЎРѕР·РґР°РЅРёРµ РѕР±СЉРµРєС‚Р° Product РёР· СЃС‚СЂРѕРєРё С„Р°Р№Р»Р°
     static Product fromString(const string& line) {
         size_t pos1 = line.find(';');
         size_t pos2 = line.find(';', pos1 + 1);
@@ -67,12 +67,12 @@ public:
     }
 };
 
-// Склад
+// РЎРєР»Р°Рґ
 class Warehouse {
 private:
     vector<Product> products;
 
-    // Поиск индекса товара по артикулу
+    // РџРѕРёСЃРє РёРЅРґРµРєСЃР° С‚РѕРІР°СЂР° РїРѕ Р°СЂС‚РёРєСѓР»Сѓ
     int findIndexByArticle(const string& article) const {
         for (size_t i = 0; i < products.size(); ++i) {
             if (products[i].getArticle() == article) {
@@ -83,71 +83,71 @@ private:
     }
 
 public:
-    // Добавление товара
+    // Р”РѕР±Р°РІР»РµРЅРёРµ С‚РѕРІР°СЂР°
     bool addProduct(const Product& product) {
         if (findIndexByArticle(product.getArticle()) != -1) {
-            cout << "Ошибка: товар с артикулом " << product.getArticle()
-                << " уже существует!" << endl;
+            cout << "РћС€РёР±РєР°: С‚РѕРІР°СЂ СЃ Р°СЂС‚РёРєСѓР»РѕРј " << product.getArticle()
+                << " СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚!" << endl;
             return false;
         }
         products.push_back(product);
-        cout << "Товар \"" << product.getName() << "\" успешно добавлен." << endl;
+        cout << "РўРѕРІР°СЂ \"" << product.getName() << "\" СѓСЃРїРµС€РЅРѕ РґРѕР±Р°РІР»РµРЅ." << endl;
         return true;
     }
 
-    // Удаление товара
+    // РЈРґР°Р»РµРЅРёРµ С‚РѕРІР°СЂР°
     bool removeProduct(const string& article) {
         int index = findIndexByArticle(article);
         if (index == -1) {
-            cout << "Ошибка: товар с артикулом " << article << " не найден!" << endl;
+            cout << "РћС€РёР±РєР°: С‚РѕРІР°СЂ СЃ Р°СЂС‚РёРєСѓР»РѕРј " << article << " РЅРµ РЅР°Р№РґРµРЅ!" << endl;
             return false;
         }
-        cout << "Товар \"" << products[index].getName() << "\" удалён." << endl;
+        cout << "РўРѕРІР°СЂ \"" << products[index].getName() << "\" СѓРґР°Р»С‘РЅ." << endl;
         products.erase(products.begin() + index);
         return true;
     }
 
-    // Приход товара (увеличение количества)
+    // РџСЂРёС…РѕРґ С‚РѕРІР°СЂР° (СѓРІРµР»РёС‡РµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР°)
     bool addStock(const string& article, int amount) {
         if (amount <= 0) {
-            cout << "Ошибка: количество для прихода должно быть положительным!" << endl;
+            cout << "РћС€РёР±РєР°: РєРѕР»РёС‡РµСЃС‚РІРѕ РґР»СЏ РїСЂРёС…РѕРґР° РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРѕР»РѕР¶РёС‚РµР»СЊРЅС‹Рј!" << endl;
             return false;
         }
         int index = findIndexByArticle(article);
         if (index == -1) {
-            cout << "Ошибка: товар с артикулом " << article << " не найден!" << endl;
+            cout << "РћС€РёР±РєР°: С‚РѕРІР°СЂ СЃ Р°СЂС‚РёРєСѓР»РѕРј " << article << " РЅРµ РЅР°Р№РґРµРЅ!" << endl;
             return false;
         }
         int newQuantity = products[index].getQuantity() + amount;
         products[index].setQuantity(newQuantity);
-        cout << "Приход оформлен. Новое количество: " << newQuantity << endl;
+        cout << "РџСЂРёС…РѕРґ РѕС„РѕСЂРјР»РµРЅ. РќРѕРІРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ: " << newQuantity << endl;
         return true;
     }
 
-    // Расход товара (уменьшение количества с контролем остатка)
+    // Р Р°СЃС…РѕРґ С‚РѕРІР°СЂР° (СѓРјРµРЅСЊС€РµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР° СЃ РєРѕРЅС‚СЂРѕР»РµРј РѕСЃС‚Р°С‚РєР°)
     bool removeStock(const string& article, int amount) {
         if (amount <= 0) {
-            cout << "Ошибка: количество для расхода должно быть положительным!" << endl;
+            cout << "РћС€РёР±РєР°: РєРѕР»РёС‡РµСЃС‚РІРѕ РґР»СЏ СЂР°СЃС…РѕРґР° РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРѕР»РѕР¶РёС‚РµР»СЊРЅС‹Рј!" << endl;
             return false;
         }
         int index = findIndexByArticle(article);
         if (index == -1) {
-            cout << "Ошибка: товар с артикулом " << article << " не найден!" << endl;
+            cout << "РћС€РёР±РєР°: С‚РѕРІР°СЂ СЃ Р°СЂС‚РёРєСѓР»РѕРј " << article << " РЅРµ РЅР°Р№РґРµРЅ!" << endl;
             return false;
         }
         int currentQuantity = products[index].getQuantity();
         if (amount > currentQuantity) {
-            cout << "Ошибка: недостаточно товара на складе! Доступно: "
+            cout << "РћС€РёР±РєР°: РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ С‚РѕРІР°СЂР° РЅР° СЃРєР»Р°РґРµ! Р”РѕСЃС‚СѓРїРЅРѕ: "
                 << currentQuantity << endl;
             return false;
         }
         int newQuantity = currentQuantity - amount;
         products[index].setQuantity(newQuantity);
-        cout << "Расход оформлен. Остаток: " << newQuantity << endl;
+        cout << "Р Р°СЃС…РѕРґ РѕС„РѕСЂРјР»РµРЅ. РћСЃС‚Р°С‚РѕРє: " << newQuantity << endl;
         return true;
     }
 
-    // Поиск товара по артикулу
+    // РџРѕРёСЃРє С‚РѕРІР°СЂР° РїРѕ Р°СЂС‚РёРєСѓР»Сѓ
     Product* findProduct(const string& article) {
         int index = findIndexByArticle(article);
         if (index == -1) {
@@ -156,7 +156,7 @@ public:
         return &products[index];
     }
 
-    // Поиск товаров по наименованию (частичное совпадение)
+    // РџРѕРёСЃРє С‚РѕРІР°СЂРѕРІ РїРѕ РЅР°РёРјРµРЅРѕРІР°РЅРёСЋ (С‡Р°СЃС‚РёС‡РЅРѕРµ СЃРѕРІРїР°РґРµРЅРёРµ)
     vector<Product> findProductsByName(const string& name) const {
         vector<Product> result;
         for (const auto& product : products) {
@@ -167,40 +167,40 @@ public:
         return result;
     }
 
-    // Вывод всех товаров
+    // Р’С‹РІРѕРґ РІСЃРµС… С‚РѕРІР°СЂРѕРІ
     void listAllProducts() const {
         if (products.empty()) {
-            cout << "Склад пуст." << endl;
+            cout << "РЎРєР»Р°Рґ РїСѓСЃС‚." << endl;
             return;
         }
-        cout << "\n--- Список всех товаров ---" << endl;
+        cout << "\n--- РЎРїРёСЃРѕРє РІСЃРµС… С‚РѕРІР°СЂРѕРІ ---" << endl;
         for (const auto& product : products) {
             product.print();
             cout << "------------------------" << endl;
         }
     }
 
-    // Формирование отчёта об остатках
+    // Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС‚С‡С‘С‚Р° РѕР± РѕСЃС‚Р°С‚РєР°С…
     void printReport() const {
         if (products.empty()) {
-            cout << "Склад пуст. Отчёт не может быть сформирован." << endl;
+            cout << "РЎРєР»Р°Рґ РїСѓСЃС‚. РћС‚С‡С‘С‚ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЃС„РѕСЂРјРёСЂРѕРІР°РЅ." << endl;
             return;
         }
-        cout << "\n++++++++++ ОТЧЁТ ОБ ОСТАТКАХ ++++++++++" << endl;
-        cout << "Всего наименований товаров: " << products.size() << endl;
-        cout << "Общая стоимость всех товаров: " << getTotalWarehouseValue() << " руб." << endl;
-        cout << "\nДетализация:" << endl;
+        cout << "\n++++++++++ РћРўР§РЃРў РћР‘ РћРЎРўРђРўРљРђРҐ ++++++++++" << endl;
+        cout << "Р’СЃРµРіРѕ РЅР°РёРјРµРЅРѕРІР°РЅРёР№ С‚РѕРІР°СЂРѕРІ: " << products.size() << endl;
+        cout << "РћР±С‰Р°СЏ СЃС‚РѕРёРјРѕСЃС‚СЊ РІСЃРµС… С‚РѕРІР°СЂРѕРІ: " << getTotalWarehouseValue() << " СЂСѓР±." << endl;
+        cout << "\nР”РµС‚Р°Р»РёР·Р°С†РёСЏ:" << endl;
         cout << "----------------------------------------" << endl;
         for (const auto& product : products) {
-            cout << "Артикул: " << product.getArticle()
-                << " | Наименование: " << product.getName()
-                << " | Количество: " << product.getQuantity()
-                << " | Общая стоимость: " << product.getTotalValue() << " руб." << endl;
+            cout << "РђСЂС‚РёРєСѓР»: " << product.getArticle()
+                << " | РќР°РёРјРµРЅРѕРІР°РЅРёРµ: " << product.getName()
+                << " | РљРѕР»РёС‡РµСЃС‚РІРѕ: " << product.getQuantity()
+                << " | РћР±С‰Р°СЏ СЃС‚РѕРёРјРѕСЃС‚СЊ: " << product.getTotalValue() << " СЂСѓР±." << endl;
         }
         cout << "----------------------------------------" << endl;
     }
 
-    // Общая стоимость всех товаров на складе
+    // РћР±С‰Р°СЏ СЃС‚РѕРёРјРѕСЃС‚СЊ РІСЃРµС… С‚РѕРІР°СЂРѕРІ РЅР° СЃРєР»Р°РґРµ
     double getTotalWarehouseValue() const {
         double total = 0;
         for (const auto& product : products) {
@@ -209,28 +209,28 @@ public:
         return total;
     }
 
-    // Получение всех товаров (для сохранения)
+    // РџРѕР»СѓС‡РµРЅРёРµ РІСЃРµС… С‚РѕРІР°СЂРѕРІ (РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ)
     const vector<Product>& getAllProducts() const {
         return products;
     }
 
-    // Очистка склада
+    // РћС‡РёСЃС‚РєР° СЃРєР»Р°РґР°
     void clear() {
         products.clear();
     }
 
-    // Добавление товара из данных (для загрузки)
+    // Р”РѕР±Р°РІР»РµРЅРёРµ С‚РѕРІР°СЂР° РёР· РґР°РЅРЅС‹С… (РґР»СЏ Р·Р°РіСЂСѓР·РєРё)
     void addProductFromData(const Product& product) {
         products.push_back(product);
     }
 
-    // Количество товаров
+    // РљРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕРІР°СЂРѕРІ
     int getProductCount() const {
         return static_cast<int>(products.size());
     }
 };
 
-// Работа с файлами
+// Р Р°Р±РѕС‚Р° СЃ С„Р°Р№Р»Р°РјРё
 class FileManager {
 private:
     string filename;
@@ -238,11 +238,11 @@ private:
 public:
     FileManager(const string& fname = "warehouse_data.txt") : filename(fname) {}
 
-    // Сохранение данных в файл
+    // РЎРѕС…СЂР°РЅРµРЅРёРµ РґР°РЅРЅС‹С… РІ С„Р°Р№Р»
     bool saveToFile(const Warehouse& warehouse) {
         ofstream file(filename);
         if (!file.is_open()) {
-            cout << "Ошибка: не удалось открыть файл для записи!" << endl;
+            cout << "РћС€РёР±РєР°: РЅРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р» РґР»СЏ Р·Р°РїРёСЃРё!" << endl;
             return false;
         }
 
@@ -252,15 +252,15 @@ public:
         }
 
         file.close();
-        cout << "Данные сохранены в файл " << filename << endl;
+        cout << "Р”Р°РЅРЅС‹Рµ СЃРѕС…СЂР°РЅРµРЅС‹ РІ С„Р°Р№Р» " << filename << endl;
         return true;
     }
 
-    // Загрузка данных из файла
+    // Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С… РёР· С„Р°Р№Р»Р°
     bool loadFromFile(Warehouse& warehouse) {
         ifstream file(filename);
         if (!file.is_open()) {
-            cout << "Файл " << filename << " не найден. Будет создан новый склад." << endl;
+            cout << "Р¤Р°Р№Р» " << filename << " РЅРµ РЅР°Р№РґРµРЅ. Р‘СѓРґРµС‚ СЃРѕР·РґР°РЅ РЅРѕРІС‹Р№ СЃРєР»Р°Рґ." << endl;
             return false;
         }
 
@@ -276,63 +276,63 @@ public:
                 lineCount++;
             }
             catch (const exception& e) {
-                cout << "Ошибка при чтении строки: " << line << endl;
+                cout << "РћС€РёР±РєР° РїСЂРё С‡С‚РµРЅРёРё СЃС‚СЂРѕРєРё: " << line << endl;
             }
         }
 
         file.close();
         if (lineCount > 0) {
-            cout << "Загружено " << lineCount << " товаров из файла " << filename << endl;
+            cout << "Р—Р°РіСЂСѓР¶РµРЅРѕ " << lineCount << " С‚РѕРІР°СЂРѕРІ РёР· С„Р°Р№Р»Р° " << filename << endl;
         }
         return lineCount > 0;
     }
 };
 
-// Консольный интерфейс
+// РљРѕРЅСЃРѕР»СЊРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ
 class ConsoleInterface {
 public:
-    // Очистка потока ввода
+    // РћС‡РёСЃС‚РєР° РїРѕС‚РѕРєР° РІРІРѕРґР°
     void clearInput() {
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
 
-    // Вывод главного меню
+    // Р’С‹РІРѕРґ РіР»Р°РІРЅРѕРіРѕ РјРµРЅСЋ
     void showMainMenu() {
         cout << "\n++++++++++++++++++++++++++++++++++++++++" << endl;
-        cout << "+        СКЛАДСКОЕ ХОЗЯЙСТВО           +" << endl;
+        cout << "+        РЎРљР›РђР”РЎРљРћР• РҐРћР—РЇР™РЎРўР’Рћ           +" << endl;
         cout << "++++++++++++++++++++++++++++++++++++++++" << endl;
-        cout << "1. Добавить товар" << endl;
-        cout << "2. Удалить товар" << endl;
-        cout << "3. Оформить приход товара" << endl;
-        cout << "4. Оформить расход товара" << endl;
-        cout << "5. Найти товар по артикулу" << endl;
-        cout << "6. Найти товары по наименованию" << endl;
-        cout << "7. Показать все товары" << endl;
-        cout << "8. Сформировать отчёт об остатках" << endl;
-        cout << "9. Выход" << endl;
+        cout << "1. Р”РѕР±Р°РІРёС‚СЊ С‚РѕРІР°СЂ" << endl;
+        cout << "2. РЈРґР°Р»РёС‚СЊ С‚РѕРІР°СЂ" << endl;
+        cout << "3. РћС„РѕСЂРјРёС‚СЊ РїСЂРёС…РѕРґ С‚РѕРІР°СЂР°" << endl;
+        cout << "4. РћС„РѕСЂРјРёС‚СЊ СЂР°СЃС…РѕРґ С‚РѕРІР°СЂР°" << endl;
+        cout << "5. РќР°Р№С‚Рё С‚РѕРІР°СЂ РїРѕ Р°СЂС‚РёРєСѓР»Сѓ" << endl;
+        cout << "6. РќР°Р№С‚Рё С‚РѕРІР°СЂС‹ РїРѕ РЅР°РёРјРµРЅРѕРІР°РЅРёСЋ" << endl;
+        cout << "7. РџРѕРєР°Р·Р°С‚СЊ РІСЃРµ С‚РѕРІР°СЂС‹" << endl;
+        cout << "8. РЎС„РѕСЂРјРёСЂРѕРІР°С‚СЊ РѕС‚С‡С‘С‚ РѕР± РѕСЃС‚Р°С‚РєР°С…" << endl;
+        cout << "9. Р’С‹С…РѕРґ" << endl;
         cout << "++++++++++++++++++++++++++++++++++++++++" << endl;
-        cout << "Выберите пункт меню (1-9): ";
+        cout << "Р’С‹Р±РµСЂРёС‚Рµ РїСѓРЅРєС‚ РјРµРЅСЋ (1-9): ";
     }
 
-    // Ввод артикула
-    string inputArticle(const string& prompt = "Введите артикул товара: ") {
+    // Р’РІРѕРґ Р°СЂС‚РёРєСѓР»Р°
+    string inputArticle(const string& prompt = "Р’РІРµРґРёС‚Рµ Р°СЂС‚РёРєСѓР» С‚РѕРІР°СЂР°: ") {
         string article;
         cout << prompt;
         getline(cin, article);
         return article;
     }
 
-    // Ввод наименования
-    string inputName(const string& prompt = "Введите наименование товара: ") {
+    // Р’РІРѕРґ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ
+    string inputName(const string& prompt = "Р’РІРµРґРёС‚Рµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РѕРІР°СЂР°: ") {
         string name;
         cout << prompt;
         getline(cin, name);
         return name;
     }
 
-    // Ввод количества
-    int inputQuantity(const string& prompt = "Введите количество: ") {
+    // Р’РІРѕРґ РєРѕР»РёС‡РµСЃС‚РІР°
+    int inputQuantity(const string& prompt = "Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ: ") {
         int quantity;
         cout << prompt;
         cin >> quantity;
@@ -340,8 +340,8 @@ public:
         return quantity;
     }
 
-    // Ввод цены
-    double inputPrice(const string& prompt = "Введите цену за единицу: ") {
+    // Р’РІРѕРґ С†РµРЅС‹
+    double inputPrice(const string& prompt = "Р’РІРµРґРёС‚Рµ С†РµРЅСѓ Р·Р° РµРґРёРЅРёС†Сѓ: ") {
         double price;
         cout << prompt;
         cin >> price;
@@ -349,7 +349,7 @@ public:
         return price;
     }
 
-    // Ввод целого числа с проверкой
+    // Р’РІРѕРґ С†РµР»РѕРіРѕ С‡РёСЃР»Р° СЃ РїСЂРѕРІРµСЂРєРѕР№
     int inputInt(const string& prompt) {
         int value;
         cout << prompt;
@@ -358,14 +358,14 @@ public:
         return value;
     }
 
-    // Пауза перед продолжением
+    // РџР°СѓР·Р° РїРµСЂРµРґ РїСЂРѕРґРѕР»Р¶РµРЅРёРµРј
     void waitForEnter() {
-        cout << "\nНажмите Enter для продолжения...";
+        cout << "\nРќР°Р¶РјРёС‚Рµ Enter РґР»СЏ РїСЂРѕРґРѕР»Р¶РµРЅРёСЏ...";
         cin.get();
     }
 };
 
-// Главный класс приложения
+// Р“Р»Р°РІРЅС‹Р№ РєР»Р°СЃСЃ РїСЂРёР»РѕР¶РµРЅРёСЏ
 class Application {
 private:
     Warehouse warehouse;
@@ -373,9 +373,9 @@ private:
     ConsoleInterface console;
     bool running;
 
-    // Обработка добавления товара
+    // РћР±СЂР°Р±РѕС‚РєР° РґРѕР±Р°РІР»РµРЅРёСЏ С‚РѕРІР°СЂР°
     void handleAddProduct() {
-        cout << "\n--- ДОБАВЛЕНИЕ ТОВАРА ---" << endl;
+        cout << "\n--- Р”РћР‘РђР’Р›Р•РќРР• РўРћР’РђР Рђ ---" << endl;
         string article = console.inputArticle();
         string name = console.inputName();
         int quantity = console.inputQuantity();
@@ -385,54 +385,54 @@ private:
         warehouse.addProduct(newProduct);
     }
 
-    // Обработка удаления товара
+    // РћР±СЂР°Р±РѕС‚РєР° СѓРґР°Р»РµРЅРёСЏ С‚РѕРІР°СЂР°
     void handleRemoveProduct() {
-        cout << "\n--- УДАЛЕНИЕ ТОВАРА ---" << endl;
+        cout << "\n--- РЈР”РђР›Р•РќРР• РўРћР’РђР Рђ ---" << endl;
         string article = console.inputArticle();
         warehouse.removeProduct(article);
     }
 
-    // Обработка прихода товара
+    // РћР±СЂР°Р±РѕС‚РєР° РїСЂРёС…РѕРґР° С‚РѕРІР°СЂР°
     void handleAddStock() {
-        cout << "\n--- ПРИХОД ТОВАРА ---" << endl;
+        cout << "\n--- РџР РРҐРћР” РўРћР’РђР Рђ ---" << endl;
         string article = console.inputArticle();
-        int amount = console.inputQuantity("Введите количество для прихода: ");
+        int amount = console.inputQuantity("Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ РґР»СЏ РїСЂРёС…РѕРґР°: ");
         warehouse.addStock(article, amount);
     }
 
-    // Обработка расхода товара
+    // РћР±СЂР°Р±РѕС‚РєР° СЂР°СЃС…РѕРґР° С‚РѕРІР°СЂР°
     void handleRemoveStock() {
-        cout << "\n--- РАСХОД ТОВАРА ---" << endl;
+        cout << "\n--- Р РђРЎРҐРћР” РўРћР’РђР Рђ ---" << endl;
         string article = console.inputArticle();
-        int amount = console.inputQuantity("Введите количество для расхода: ");
+        int amount = console.inputQuantity("Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ РґР»СЏ СЂР°СЃС…РѕРґР°: ");
         warehouse.removeStock(article, amount);
     }
 
-    // Обработка поиска по артикулу
+    // РћР±СЂР°Р±РѕС‚РєР° РїРѕРёСЃРєР° РїРѕ Р°СЂС‚РёРєСѓР»Сѓ
     void handleFindByArticle() {
-        cout << "\n--- ПОИСК ТОВАРА ПО АРТИКУЛУ ---" << endl;
+        cout << "\n--- РџРћРРЎРљ РўРћР’РђР Рђ РџРћ РђР РўРРљРЈР›РЈ ---" << endl;
         string article = console.inputArticle();
         Product* product = warehouse.findProduct(article);
         if (product == nullptr) {
-            cout << "Товар с артикулом " << article << " не найден!" << endl;
+            cout << "РўРѕРІР°СЂ СЃ Р°СЂС‚РёРєСѓР»РѕРј " << article << " РЅРµ РЅР°Р№РґРµРЅ!" << endl;
         }
         else {
-            cout << "\nИнформация о товаре:" << endl;
+            cout << "\nРРЅС„РѕСЂРјР°С†РёСЏ Рѕ С‚РѕРІР°СЂРµ:" << endl;
             cout << "------------------------" << endl;
             product->print();
         }
     }
 
-    // Обработка поиска по наименованию
+    // РћР±СЂР°Р±РѕС‚РєР° РїРѕРёСЃРєР° РїРѕ РЅР°РёРјРµРЅРѕРІР°РЅРёСЋ
     void handleFindByName() {
-        cout << "\n--- ПОИСК ТОВАРОВ ПО НАИМЕНОВАНИЮ ---" << endl;
-        string name = console.inputName("Введите наименование (или его часть): ");
+        cout << "\n--- РџРћРРЎРљ РўРћР’РђР РћР’ РџРћ РќРђРРњР•РќРћР’РђРќРР® ---" << endl;
+        string name = console.inputName("Р’РІРµРґРёС‚Рµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ (РёР»Рё РµРіРѕ С‡Р°СЃС‚СЊ): ");
         vector<Product> found = warehouse.findProductsByName(name);
         if (found.empty()) {
-            cout << "Товары, содержащие \"" << name << "\", не найдены!" << endl;
+            cout << "РўРѕРІР°СЂС‹, СЃРѕРґРµСЂР¶Р°С‰РёРµ \"" << name << "\", РЅРµ РЅР°Р№РґРµРЅС‹!" << endl;
         }
         else {
-            cout << "\nНайдено товаров: " << found.size() << endl;
+            cout << "\nРќР°Р№РґРµРЅРѕ С‚РѕРІР°СЂРѕРІ: " << found.size() << endl;
             cout << "------------------------" << endl;
             for (const auto& product : found) {
                 product.print();
@@ -441,12 +441,12 @@ private:
         }
     }
 
-    // Обработка вывода всех товаров
+    // РћР±СЂР°Р±РѕС‚РєР° РІС‹РІРѕРґР° РІСЃРµС… С‚РѕРІР°СЂРѕРІ
     void handleListAll() {
         warehouse.listAllProducts();
     }
 
-    // Обработка формирования отчёта
+    // РћР±СЂР°Р±РѕС‚РєР° С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ РѕС‚С‡С‘С‚Р°
     void handlePrintReport() {
         warehouse.printReport();
     }
@@ -454,13 +454,13 @@ private:
 public:
     Application() : running(true) {}
 
-    // Запуск приложения
+    // Р—Р°РїСѓСЃРє РїСЂРёР»РѕР¶РµРЅРёСЏ
     void run() {
-        // Загружаем данные из файла
-        cout << "Загрузка данных..." << endl;
+        // Р—Р°РіСЂСѓР¶Р°РµРј РґР°РЅРЅС‹Рµ РёР· С„Р°Р№Р»Р°
+        cout << "Р—Р°РіСЂСѓР·РєР° РґР°РЅРЅС‹С…..." << endl;
         fileManager.loadFromFile(warehouse);
 
-        // Основной цикл программы
+        // РћСЃРЅРѕРІРЅРѕР№ С†РёРєР» РїСЂРѕРіСЂР°РјРјС‹
         while (running) {
             console.showMainMenu();
             int choice = console.inputInt("");
@@ -491,12 +491,12 @@ public:
                 handlePrintReport();
                 break;
             case 9:
-                cout << "\nЗавершение работы..." << endl;
+                cout << "\nР—Р°РІРµСЂС€РµРЅРёРµ СЂР°Р±РѕС‚С‹..." << endl;
                 fileManager.saveToFile(warehouse);
                 running = false;
                 break;
             default:
-                cout << "Ошибка: неверный пункт меню. Выберите 1-9." << endl;
+                cout << "РћС€РёР±РєР°: РЅРµРІРµСЂРЅС‹Р№ РїСѓРЅРєС‚ РјРµРЅСЋ. Р’С‹Р±РµСЂРёС‚Рµ 1-9." << endl;
                 break;
             }
 
@@ -511,15 +511,15 @@ int main() {
     setlocale(LC_ALL, "Russian");
 
     cout << "++++++++++++++++++++++++++++++++++++++++" << endl;
-    cout << "+    ДОБРО ПОЖАЛОВАТЬ В ПРОГРАММУ      +" << endl;
-    cout << "+    СКЛАДСКОЕ ХОЗЯЙСТВО               +" << endl;
+    cout << "+    Р”РћР‘Р Рћ РџРћР–РђР›РћР’РђРўР¬ Р’ РџР РћР“Р РђРњРњРЈ      +" << endl;
+    cout << "+    РЎРљР›РђР”РЎРљРћР• РҐРћР—РЇР™РЎРўР’Рћ               +" << endl;
     cout << "++++++++++++++++++++++++++++++++++++++++" << endl;
-    cout << "Разработчик: Рассоха Е.Д." << endl;
-    cout << "Группа: бИД-252" << endl;
+    cout << "Р Р°Р·СЂР°Р±РѕС‚С‡РёРє: Р Р°СЃСЃРѕС…Р° Р•.Р”." << endl;
+    cout << "Р“СЂСѓРїРїР°: Р±РР”-252" << endl;
 
     Application app;
     app.run();
 
-    cout << "\nПрограмма завершена. До свидания!" << endl;
+    cout << "\nРџСЂРѕРіСЂР°РјРјР° Р·Р°РІРµСЂС€РµРЅР°. Р”Рѕ СЃРІРёРґР°РЅРёСЏ!" << endl;
     return 0;
 }
