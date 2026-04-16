@@ -4,6 +4,8 @@
 #include <vector>
 #include <algorithm>
 #include <limits>
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -43,25 +45,42 @@ public:
         cout << "Артикул: " << article << endl;
         cout << "Наименование: " << name << endl;
         cout << "Количество: " << quantity << endl;
-        cout << "Цена за ед.: " << price << " руб." << endl;
-        cout << "Общая стоимость: " << getTotalValue() << " руб." << endl;
+        cout << "Цена за ед.: " << fixed << setprecision(2) << price << " руб." << endl;
+        cout << "Общая стоимость: " << fixed << setprecision(2) << getTotalValue() << " руб." << endl;
     }
 
     // Преобразование в строку для сохранения в файл
     string toString() const {
-        return article + ";" + name + ";" + to_string(quantity) + ";" + to_string(price);
+        ostringstream oss;
+        oss << article << "|" << name << "|" << quantity << "|"
+            << fixed << setprecision(2) << price;
+        return oss.str();
     }
 
     // Создание объекта Product из строки файла
     static Product fromString(const string& line) {
-        size_t pos1 = line.find(';');
-        size_t pos2 = line.find(';', pos1 + 1);
-        size_t pos3 = line.find(';', pos2 + 1);
+        size_t pos1 = line.find('|');
+        size_t pos2 = line.find('|', pos1 + 1);
+        size_t pos3 = line.find('|', pos2 + 1);
+
+        if (pos1 == string::npos || pos2 == string::npos || pos3 == string::npos) {
+            throw invalid_argument("Неверный формат строки");
+        }
 
         string art = line.substr(0, pos1);
         string nam = line.substr(pos1 + 1, pos2 - pos1 - 1);
         int quant = stoi(line.substr(pos2 + 1, pos3 - pos2 - 1));
         double pr = stod(line.substr(pos3 + 1));
+
+        if (art.empty() || nam.empty()) {
+            throw invalid_argument("Пустой артикул или наименование");
+        }
+        if (quant < 0) {
+            throw invalid_argument("Количество не может быть отрицательным");
+        }
+        if (pr < 0) {
+            throw invalid_argument("Цена не может быть отрицательной");
+        }
 
         return Product(art, nam, quant, pr);
     }
@@ -85,11 +104,30 @@ private:
 public:
     // Добавление товара
     bool addProduct(const Product& product) {
+        if (product.getArticle().empty()) {
+            cout << "Ошибка: артикул не может быть пустым!" << endl;
+            return false;
+        }
+        if (product.getName().empty()) {
+            cout << "Ошибка: наименование не может быть пустым!" << endl;
+            return false;
+        }
+        if (product.getQuantity() < 0) {
+            cout << "Ошибка: количество не может быть отрицательным!" << endl;
+            return false;
+        }
+        if (product.getPrice() < 0) {
+            cout << "Ошибка: цена не может быть отрицательной!" << endl;
+            return false;
+        }
+
         if (findIndexByArticle(product.getArticle()) != -1) {
             cout << "Ошибка: товар с артикулом " << product.getArticle()
                 << " уже существует!" << endl;
             return false;
         }
+
+
         products.push_back(product);
         cout << "Товар \"" << product.getName() << "\" успешно добавлен." << endl;
         return true;
@@ -180,6 +218,7 @@ public:
         }
     }
 
+
     // Формирование отчёта об остатках
     void printReport() const {
         if (products.empty()) {
@@ -188,14 +227,16 @@ public:
         }
         cout << "\n++++++++++ ОТЧЁТ ОБ ОСТАТКАХ ++++++++++" << endl;
         cout << "Всего наименований товаров: " << products.size() << endl;
-        cout << "Общая стоимость всех товаров: " << getTotalWarehouseValue() << " руб." << endl;
+        cout << "Общая стоимость всех товаров: " << fixed << setprecision(2)
+            << getTotalWarehouseValue() << " руб." << endl;
         cout << "\nДетализация:" << endl;
         cout << "----------------------------------------" << endl;
         for (const auto& product : products) {
             cout << "Артикул: " << product.getArticle()
                 << " | Наименование: " << product.getName()
                 << " | Количество: " << product.getQuantity()
-                << " | Общая стоимость: " << product.getTotalValue() << " руб." << endl;
+                << " | Общая стоимость: " << fixed << setprecision(2)
+                << product.getTotalValue() << " руб." << endl;
         }
         cout << "----------------------------------------" << endl;
     }
@@ -221,7 +262,13 @@ public:
 
     // Добавление товара из данных (для загрузки)
     void addProductFromData(const Product& product) {
-        products.push_back(product);
+        if (findIndexByArticle(product.getArticle()) == -1) {
+            products.push_back(product);
+        }
+        else {
+            cout << "Предупреждение: дубликат артикула " << product.getArticle()
+                << " в файле пропущен." << endl;
+        }
     }
 
     // Количество товаров
@@ -269,21 +316,22 @@ public:
         int lineCount = 0;
 
         while (getline(file, line)) {
-            if (line.empty()) continue;
+            if (line.empty()) {
+                continue;
+            }
+
             try {
                 Product product = Product::fromString(line);
                 warehouse.addProductFromData(product);
                 lineCount++;
             }
-            catch (const exception& e) {
+            catch (const exception&) {
                 cout << "Ошибка при чтении строки: " << line << endl;
             }
         }
 
         file.close();
-        if (lineCount > 0) {
-            cout << "Загружено " << lineCount << " товаров из файла " << filename << endl;
-        }
+        cout << "Загружено " << lineCount << " товаров из файла " << filename << endl;
         return lineCount > 0;
     }
 };
@@ -296,6 +344,7 @@ public:
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
+
 
     // Вывод главного меню
     void showMainMenu() {
@@ -334,28 +383,55 @@ public:
     // Ввод количества
     int inputQuantity(const string& prompt = "Введите количество: ") {
         int quantity;
-        cout << prompt;
-        cin >> quantity;
-        clearInput();
-        return quantity;
+        while (true) {
+            cout << prompt;
+            cin >> quantity;
+
+            if (cin.fail()) {
+                cout << "Ошибка: введите целое число!" << endl;
+                clearInput();
+                continue;
+            }
+
+            clearInput();
+            return quantity;
+        }
     }
 
     // Ввод цены
     double inputPrice(const string& prompt = "Введите цену за единицу: ") {
         double price;
-        cout << prompt;
-        cin >> price;
-        clearInput();
-        return price;
+        while (true) {
+            cout << prompt;
+            cin >> price;
+
+            if (cin.fail()) {
+                cout << "Ошибка: введите число!" << endl;
+                clearInput();
+                continue;
+            }
+
+            clearInput();
+            return price;
+        }
     }
 
     // Ввод целого числа с проверкой
     int inputInt(const string& prompt) {
         int value;
-        cout << prompt;
-        cin >> value;
-        clearInput();
-        return value;
+        while (true) {
+            cout << prompt;
+            cin >> value;
+
+            if (cin.fail()) {
+                cout << "Ошибка: введите целое число!" << endl;
+                clearInput();
+                continue;
+            }
+
+            clearInput();
+            return value;
+        }
     }
 
     // Пауза перед продолжением
@@ -407,6 +483,7 @@ private:
         int amount = console.inputQuantity("Введите количество для расхода: ");
         warehouse.removeStock(article, amount);
     }
+
 
     // Обработка поиска по артикулу
     void handleFindByArticle() {
