@@ -1,0 +1,118 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    double price;
+    string fuelName;
+    int choice;
+    
+    cout << "========== АВТОЗАПРАВОЧНАЯ СТАНЦИЯ ==========\n";
+    cout << "1. АИ-92 (48.5 руб/л)\n";
+    cout << "2. АИ-95 (52.3 руб/л)\n";
+    cout << "3. АИ-98 (60.1 руб/л)\n";
+    cout << "4. Дизель (55.7 руб/л)\n";
+    cout << "==============================================\n";
+    
+    while (true) {
+        cout << "Выберите топливо (1-4): ";
+        cin >> choice;
+        if (choice >= 1 && choice <= 4) {
+            break;
+        }
+        cout << "Ошибка! Введите число от 1 до 4.\n";
+    }
+    
+    if (choice == 1) { price = 48.5; fuelName = "АИ-92"; }
+    else if (choice == 2) { price = 52.3; fuelName = "АИ-95"; }
+    else if (choice == 3) { price = 60.1; fuelName = "АИ-98"; }
+    else { price = 55.7; fuelName = "Дизель"; }
+    
+    int mode;
+    double liters, total;
+    
+    while (true) {
+        cout << "Что укажете? (1 - литры, 2 - сумма): ";
+        cin >> mode;
+        
+        if (mode == 1) {
+            cout << "Литры: ";
+            cin >> liters;
+            if (liters > 0) {
+                total = liters * price;
+                cout << "К оплате: " << total << " руб.\n";
+                break;
+            }
+        } 
+        else if (mode == 2) {
+            cout << "Сумма (руб): ";
+            cin >> total;
+            if (total > 0) {
+                liters = total / price;
+                cout << "Получите: " << liters << " литров\n";
+                break;
+            }
+        }
+        cout << "Ошибка! Введите положительное число.\n";
+    }
+    
+    int payment;
+    double cash, change;
+    bool paid = false;
+    
+    while (true) {
+        cout << "Оплата (1 - наличные, 2 - карта): ";
+        cin >> payment;
+        
+        if (payment == 1) {
+            cout << "Внесите сумму: ";
+            cin >> cash;
+            
+            if (cash >= total) {
+                change = cash - total;
+                cout << "Оплачено. Сдача: " << change << " руб.\n";
+                paid = true;
+                break;
+            } else {
+                cout << "Не хватает " << total - cash << " руб.\n";
+                cout << "1 - повторить, 0 - отмена: ";
+                int retry;
+                cin >> retry;
+                if (retry == 0) {
+                    cout << "Операция отменена.\n";
+                    break;
+                }
+            }
+        }
+        else if (payment == 2) {
+            char confirm;
+            cout << "Сумма " << total << " руб. Подтвердить? (д/н): ";
+            cin >> confirm;
+            if (confirm == 'д' || confirm == 'Д' || confirm == 'y' || confirm == 'Y') {
+                cout << "Оплата картой прошла.\n";
+                change = 0;
+                paid = true;
+                break;
+            } else {
+                cout << "Оплата отменена.\n";
+                break;
+            }
+        }
+        else {
+            cout << "Выберите 1 или 2.\n";
+        }
+    }
+    
+    if (paid) {
+        cout << "\n============ ЧЕК ============\n";
+        cout << "Топливо: " << fuelName << "\n";
+        cout << "Литров: " << liters << "\n";
+        cout << "Сумма: " << total << " руб.\n";
+        cout << "Оплата: " << (payment == 1 ? "Наличные" : "Карта") << "\n";
+        if (change > 0) cout << "Сдача: " << change << " руб.\n";
+        cout << "==============================\n";
+        cout << "Спасибо за заправку!\n";
+    }
+    
+    return 0;
+}
